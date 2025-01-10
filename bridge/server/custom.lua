@@ -16,6 +16,15 @@ local function GetPlayerId(source)
 	return Your_Framework.GetPlayer(source) -- example
 end
 
+--- Retrieves the job of the player
+---@param source number -- Player's source ID
+---@return table -- The player's job
+local function GetPlayerJob(source)
+    local Player = GetPlayerId(source)
+    if not Player then return nil end
+    return Player.GetJob() -- example
+end
+
 --- Checks if the player can carry the specified item and quantity.
 ---@param source number -- Player's source ID
 ---@param itemName string -- The name of the item
@@ -177,5 +186,13 @@ lib.callback.register("cloud-shop:server:ProcessTransaction", function(source, t
 	return success, reason
 end)
 lib.callback.register("cloud-shop:server:InShop", function(source, status)
-	inShop[source] = status
+    local shopConfig = Config.Shops["shop"] -- Adjust if necessary to get the correct shop configuration
+    local job = GetPlayerJob(source)
+    if job and job.name == shopConfig.JobRequired then
+        inShop[source] = status
+        return true
+    else
+        ServerNotify(source, "You do not have the required job to access this shop.", "error")
+        return false
+    end
 end)
