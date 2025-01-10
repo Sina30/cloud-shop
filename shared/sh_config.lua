@@ -103,6 +103,7 @@ return {
 				Color = 0,
 				Scale = 0.7,
 			},
+			JobRequired = "YOUR_JOB_NAME",
 			NpcPed = {
 				Model = `mp_m_shopkeep_01`,
 				Scenario = "WORLD_HUMAN_AA_SMOKE",
@@ -233,6 +234,7 @@ return {
 				Color = 0,
 				Scale = 0.7,
 			},
+			JobRequired = "YOUR_JOB_NAME",
 			NpcPed = {
 				Model = `mp_m_weapexp_01`,
 				Scenario = "WORLD_HUMAN_GUARD_STAND",
