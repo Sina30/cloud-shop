@@ -12,6 +12,13 @@ local function GetPlayerId(source)
 	return ESX.GetPlayerFromId(source)
 end
 
+-- Add this function to get the player's job
+local function GetPlayerJob(source)
+    local xPlayer = GetPlayerId(source)
+    if not xPlayer then return nil end
+    return xPlayer.getJob()
+end
+
 local function CanCarryItem(source, itemName, itemQuantity)
 	if Config.OxInventory then
 		return exports.ox_inventory:CanCarryItem(source, itemName, itemQuantity)
@@ -150,5 +157,13 @@ lib.callback.register("cloud-shop:server:ProcessTransaction", function(source, t
 	return success, reason
 end)
 lib.callback.register("cloud-shop:server:InShop", function(source, status)
-	inShop[source] = status
+    local shopConfig = Config.Shops["shop"] -- Adjust if necessary to get the correct shop configuration
+    local job = GetPlayerJob(source)
+    if job and job.name == shopConfig.JobRequired then
+        inShop[source] = status
+        return true
+    else
+        ServerNotify(source, "You do not have the required job to access this shop.", "error")
+        return false
+    end
 end)
