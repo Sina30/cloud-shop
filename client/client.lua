@@ -168,12 +168,15 @@ local function HandleShopWithLicense(shopData)
 end
 
 local function OpenShop(shopId)
-	local shopData = Config.Shops[shopId]
-	if shopData.License.Required then
-		HandleShopWithLicense(shopData)
-	else
-		OpenShopUI(shopData)
-	end
+    local shopData = Config.Shops[shopId]
+    local job = GetPlayerJob(cache.ped)
+    if shopData.License.Required then
+        HandleShopWithLicense(shopData)
+    elseif job and job.name == shopData.JobRequired then
+        OpenShopUI(shopData)
+    else
+        ClientNotify("You do not have the required job to access this shop.", "error")
+    end
 end
 
 local function CloseShopUI()
